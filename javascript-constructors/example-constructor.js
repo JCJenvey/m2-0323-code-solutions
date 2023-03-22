@@ -1,6 +1,6 @@
 function ExampleConstructor() {}
-console.log('value of ExampleConstructor: ', ExampleConstructor);
-console.log('typeof of ExampleConstructor: ', typeof ExampleConstructor);
+console.log('value of ExampleConstructor.prototype: ', ExampleConstructor.prototype);
+console.log('typeof of ExampleConstructor.prototype: ', typeof ExampleConstructor.prototype);
 
 const exampleObj = new ExampleConstructor();
 console.log('value of exampleObj: ', exampleObj);
