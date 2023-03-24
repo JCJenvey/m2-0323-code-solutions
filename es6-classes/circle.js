@@ -2,7 +2,9 @@
 /* exported Circle */
 
 class Circle extends Shape {
-  constructor(area, circumference, radius) {
+  constructor(radius) {
+    const area = Math.PI * (radius * radius);
+    const circumference = 2 * Math.PI * radius;
     super(area, circumference);
     this.radius = radius;
   }
@@ -12,6 +14,6 @@ class Circle extends Shape {
   }
 }
 
-const newCircle = new Circle(14, 18, 2);
+const newCircle = new Circle(5);
 
 console.log(newCircle.print());
