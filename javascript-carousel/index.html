@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript Carousel</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <i class="fa-sharp fa-solid fa-chevron-left fa-2xl arrow back"></i>
+    <div class="carousel">
+      <img src="images/001.png" data-img="img1" class="img">
+      <img src="images/004.png" data-img="img2" class="img hidden">
+      <img src="images/007.png" data-img="img3" class="img hidden">
+      <img src="images/025.png" data-img="img4" class="img hidden">
+      <img src="images/039.png" data-img="img5" class="img hidden">
+      <div class="progress-dot">
+        <i class="fa-solid fa-circle dot" data-img="img1"></i>
+        <i class="fa-regular fa-circle dot" data-img="img2"></i>
+        <i class="fa-regular fa-circle dot" data-img="img3"></i>
+        <i class="fa-regular fa-circle dot" data-img="img4"></i>
+        <i class="fa-regular fa-circle dot" data-img="img5"></i>
+      </div>
+    </div>
+    <i class="fa-sharp fa-solid fa-chevron-right fa-2xl arrow forward"></i>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>
