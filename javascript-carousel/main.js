@@ -2,10 +2,11 @@ const $img = document.getElementsByClassName('img');
 const $dot = document.getElementsByClassName('dot');
 const $forwardArrow = document.querySelector('.forward');
 const $backArrow = document.querySelector('.back');
+const $progressDot = document.querySelector('.progress-dot');
 
 let imgViewID = setInterval(imgIntervalCallback, 3000);
 
-// Eventy listeners below:
+// Event listeners below:
 $forwardArrow.addEventListener('click', function (e) {
   clearInterval(imgViewID);
   const currentImg = advanceImg();
@@ -27,6 +28,17 @@ $backArrow.addEventListener('click', function (e) {
   }
   imgSwap($img, $dot, currentImg);
   imgViewID = setInterval(imgIntervalCallback, 3000);
+});
+
+$progressDot.addEventListener('click', function (e) {
+  if (e.target && e.target.nodeName === 'I') {
+    if (e.target.getAttribute('class') === 'fa-regular fa-circle dot') {
+      clearInterval(imgViewID);
+      const currentImg = e.target.getAttribute('data-img');
+      imgSwap($img, $dot, currentImg);
+      imgViewID = setInterval(imgIntervalCallback, 3000);
+    }
+  }
 });
 
 // Function declarations below
