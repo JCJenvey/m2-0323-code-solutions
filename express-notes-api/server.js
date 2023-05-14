@@ -1,11 +1,11 @@
 import express from 'express';
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 
 const app = express();
 
 const notesData = JSON.parse(await readFile('./data.json', { encoding: 'utf8' }));
-// let nextID = notesData.nextId;
 const notes = notesData.notes;
+let nextId = notesData.nextId;
 
 app.get('/api/notes', (req, res) => {
   const notesArr = [];
@@ -22,6 +22,26 @@ app.get('/api/notes/:id', (req, res) => {
     res.json(notes[req.params.id]);
   } else {
     res.status(404).json({ error: 'cannot find note with id ' + req.params.id });
+  }
+});
+
+app.use('/', express.json());
+
+app.post('/api/notes', async (req, res) => {
+  try {
+    if (!req.body.content) {
+      res.status(400).json({ error: 'content is a required field' });
+    }
+    req.body.id = nextId;
+    notes[nextId] = req.body;
+    nextId++;
+    notesData.nextId = nextId;
+    notesData.notes = notes;
+    await writeFile('data.json', JSON.stringify(notesData));
+    res.status(201).json(req.body);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'An unexpected error occurred' });
   }
 });
 
