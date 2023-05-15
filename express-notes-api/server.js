@@ -25,20 +25,39 @@ app.get('/api/notes/:id', (req, res) => {
   }
 });
 
+app.delete('/api/notes/:id', async (req, res) => {
+  try {
+    if (parseInt(req.params.id) < 1 || !parseInt(req.params.id)) {
+      res.status(400).json({ error: 'id must be a positive integer' });
+    } else if (notes[req.params.id]) {
+      delete notes[req.params.id];
+      notesData.notes = notes;
+      await writeFile('data.json', JSON.stringify(notesData));
+      res.sendStatus(204);
+    } else {
+      res.status(404).json({ error: 'cannot find note with id ' + req.params.id });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'An unexpected error occurred' });
+  }
+});
+
 app.use('/', express.json());
 
 app.post('/api/notes', async (req, res) => {
   try {
     if (!req.body.content) {
       res.status(400).json({ error: 'content is a required field' });
+    } else {
+      req.body.id = nextId;
+      notes[nextId] = req.body;
+      nextId++;
+      notesData.nextId = nextId;
+      notesData.notes = notes;
+      await writeFile('data.json', JSON.stringify(notesData));
+      res.status(201).json(req.body);
     }
-    req.body.id = nextId;
-    notes[nextId] = req.body;
-    nextId++;
-    notesData.nextId = nextId;
-    notesData.notes = notes;
-    await writeFile('data.json', JSON.stringify(notesData));
-    res.status(201).json(req.body);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'An unexpected error occurred' });
