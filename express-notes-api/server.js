@@ -64,6 +64,27 @@ app.post('/api/notes', async (req, res) => {
   }
 });
 
+app.put('/api/notes/:id', async (req, res) => {
+  try {
+    if (parseInt(req.params.id) < 1 || !parseInt(req.params.id)) {
+      res.status(400).json({ error: 'id must be a positive integer' });
+    } else if (!req.body.content) {
+      res.status(400).json({ error: 'content is a required field' });
+    } else if (notes[req.params.id]) {
+      req.body.id = req.params.id;
+      notes[req.params.id] = req.body;
+      notesData.notes = notes;
+      await writeFile('data.json', JSON.stringify(notesData));
+      res.json(notes[req.params.id]);
+    } else {
+      res.status(404).json({ error: 'cannot find note with id ' + req.params.id });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'An unexpected error occurred' });
+  }
+});
+
 app.listen(8080, () => {
   console.log('Express server listening on port 8080');
 });
