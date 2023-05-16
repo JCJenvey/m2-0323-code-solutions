@@ -16,11 +16,10 @@ app.get('/api/notes', async (req, res) => {
 app.get('/api/notes/:id', async (req, res) => {
   const notesData = JSON.parse(await readFile('./data.json', { encoding: 'utf8' }));
   const notes = notesData.notes;
-  console.log(typeof req.params.id);
-  if (Number.isInteger(parseInt(req.params.id)) || parseInt(req.params.id) < 1 || !parseInt(req.params.id)) {
+  if (!Number.isInteger(Number(req.params.id)) || Number(req.params.id) < 1 || !Number(req.params.id)) {
     res.status(400).json({ error: 'id must be a positive integer' });
-  } else if (notes[req.params.id]) {
-    res.json(notes[req.params.id]);
+  } else if (notes[req.params.id * 1]) {
+    res.json(notes[req.params.id * 1]);
   } else {
     res.status(404).json({ error: 'cannot find note with id ' + req.params.id });
   }
@@ -30,10 +29,10 @@ app.delete('/api/notes/:id', async (req, res) => {
   const notesData = JSON.parse(await readFile('./data.json', { encoding: 'utf8' }));
   const notes = notesData.notes;
   try {
-    if (Number.isInteger(parseInt(req.params.id)) || parseInt(req.params.id) < 1 || !parseInt(req.params.id)) {
+    if (!Number.isInteger(Number(req.params.id)) || Number(req.params.id) < 1 || !Number(req.params.id)) {
       res.status(400).json({ error: 'id must be a positive integer' });
-    } else if (notes[req.params.id]) {
-      delete notes[req.params.id];
+    } else if (notes[req.params.id * 1]) {
+      delete notes[req.params.id * 1];
       notesData.notes = notes;
       await writeFile('data.json', JSON.stringify(notesData));
       res.sendStatus(204);
@@ -74,16 +73,16 @@ app.put('/api/notes/:id', async (req, res) => {
   const notesData = JSON.parse(await readFile('./data.json', { encoding: 'utf8' }));
   const notes = notesData.notes;
   try {
-    if (Number.isInteger(parseInt(req.params.id)) || parseInt(req.params.id) < 1 || !parseInt(req.params.id)) {
+    if (!Number.isInteger(Number(req.params.id)) || Number(req.params.id) < 1 || !Number(req.params.id)) {
       res.status(400).json({ error: 'id must be a positive integer' });
     } else if (!req.body.content) {
       res.status(400).json({ error: 'content is a required field' });
-    } else if (notes[req.params.id]) {
-      req.body.id = req.params.id;
-      notes[req.params.id] = req.body;
+    } else if (notes[req.params.id * 1]) {
+      req.body.id = req.params.id * 1;
+      notes[req.params.id * 1] = req.body;
       notesData.notes = notes;
       await writeFile('data.json', JSON.stringify(notesData));
-      res.json(notes[req.params.id]);
+      res.json(notes[req.params.id * 1]);
     } else {
       res.status(404).json({ error: 'cannot find note with id ' + req.params.id });
     }
