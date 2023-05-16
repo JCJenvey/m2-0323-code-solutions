@@ -3,11 +3,9 @@ import { readFile, writeFile } from 'node:fs/promises';
 
 const app = express();
 
-const notesData = JSON.parse(await readFile('./data.json', { encoding: 'utf8' }));
-const notes = notesData.notes;
-let nextId = notesData.nextId;
-
-app.get('/api/notes', (req, res) => {
+app.get('/api/notes', async (req, res) => {
+  const notesData = JSON.parse(await readFile('./data.json', { encoding: 'utf8' }));
+  const notes = notesData.notes;
   const notesArr = [];
   for (const note in notes) {
     notesArr.push(notes[note]);
@@ -15,8 +13,11 @@ app.get('/api/notes', (req, res) => {
   res.json(notesArr);
 });
 
-app.get('/api/notes/:id', (req, res) => {
-  if (parseInt(req.params.id) < 1 || !parseInt(req.params.id)) {
+app.get('/api/notes/:id', async (req, res) => {
+  const notesData = JSON.parse(await readFile('./data.json', { encoding: 'utf8' }));
+  const notes = notesData.notes;
+  console.log(typeof req.params.id);
+  if (Number.isInteger(parseInt(req.params.id)) || parseInt(req.params.id) < 1 || !parseInt(req.params.id)) {
     res.status(400).json({ error: 'id must be a positive integer' });
   } else if (notes[req.params.id]) {
     res.json(notes[req.params.id]);
@@ -26,8 +27,10 @@ app.get('/api/notes/:id', (req, res) => {
 });
 
 app.delete('/api/notes/:id', async (req, res) => {
+  const notesData = JSON.parse(await readFile('./data.json', { encoding: 'utf8' }));
+  const notes = notesData.notes;
   try {
-    if (parseInt(req.params.id) < 1 || !parseInt(req.params.id)) {
+    if (Number.isInteger(parseInt(req.params.id)) || parseInt(req.params.id) < 1 || !parseInt(req.params.id)) {
       res.status(400).json({ error: 'id must be a positive integer' });
     } else if (notes[req.params.id]) {
       delete notes[req.params.id];
@@ -46,6 +49,9 @@ app.delete('/api/notes/:id', async (req, res) => {
 app.use('/', express.json());
 
 app.post('/api/notes', async (req, res) => {
+  const notesData = JSON.parse(await readFile('./data.json', { encoding: 'utf8' }));
+  const notes = notesData.notes;
+  let nextId = notesData.nextId;
   try {
     if (!req.body.content) {
       res.status(400).json({ error: 'content is a required field' });
@@ -65,8 +71,10 @@ app.post('/api/notes', async (req, res) => {
 });
 
 app.put('/api/notes/:id', async (req, res) => {
+  const notesData = JSON.parse(await readFile('./data.json', { encoding: 'utf8' }));
+  const notes = notesData.notes;
   try {
-    if (parseInt(req.params.id) < 1 || !parseInt(req.params.id)) {
+    if (Number.isInteger(parseInt(req.params.id)) || parseInt(req.params.id) < 1 || !parseInt(req.params.id)) {
       res.status(400).json({ error: 'id must be a positive integer' });
     } else if (!req.body.content) {
       res.status(400).json({ error: 'content is a required field' });
