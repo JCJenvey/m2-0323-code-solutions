@@ -21,7 +21,7 @@ app.get('/api/notes/:id', async (req, res) => {
   } else if (notes[req.params.id * 1]) {
     res.json(notes[req.params.id * 1]);
   } else {
-    res.status(404).json({ error: 'cannot find note with id ' + req.params.id });
+    res.status(404).json({ error: 'cannot find note with id ' + req.params.id * 1 });
   }
 });
 
@@ -37,7 +37,7 @@ app.delete('/api/notes/:id', async (req, res) => {
       await writeFile('data.json', JSON.stringify(notesData));
       res.sendStatus(204);
     } else {
-      res.status(404).json({ error: 'cannot find note with id ' + req.params.id });
+      res.status(404).json({ error: 'cannot find note with id ' + req.params.id * 1 });
     }
   } catch (err) {
     console.error(err);
@@ -84,7 +84,7 @@ app.put('/api/notes/:id', async (req, res) => {
       await writeFile('data.json', JSON.stringify(notesData));
       res.json(notes[req.params.id * 1]);
     } else {
-      res.status(404).json({ error: 'cannot find note with id ' + req.params.id });
+      res.status(404).json({ error: 'cannot find note with id ' + req.params.id * 1 });
     }
   } catch (err) {
     console.error(err);
